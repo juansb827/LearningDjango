@@ -1,0 +1,26 @@
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+            {% block content %}
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    {%  buttons %}
+                    <input type="submit" value="Registrar" class="btn btn-primary btn-block">
+                    <a href="{% url 'images:index' %}"  class="btn btn-primary">Cancelar</a>
+                    {% endbuttons %}
+                </form>
+            {% endblock %}
+        </div>
+</div>
+</body>
+</html>
