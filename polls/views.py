@@ -12,7 +12,10 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 def index(request):
-    lista_imagenes=Imagen.objects.all()
+    if request.user.is_authenticated():
+        lista_imagenes=Imagen.objects.filter(user=request.user)
+    else:
+        lista_imagenes=Imagen.objects.all()
     context = {'lista_imagenes' : lista_imagenes}
     return render(request,'polls/index.html',context)
 
@@ -20,7 +23,16 @@ def add_image(request):
     if request.method=='POST':
         form= ImageForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            #form.save()
+            new_imagen=Imagen(url=request.POST['url'],
+                              title=request.POST['title'],
+                              description=request.POST.get('description'),
+                              type=request.POST.get('type'),
+                              imageFile=request.FILES.get('imageFile'),
+                              user=request.user);
+            new_imagen.save();
+
+
             return HttpResponseRedirect(reverse('images:index'))
     else:
         form = ImageForm()
@@ -53,6 +65,7 @@ def add_user(request):
     }
     return render(request, 'polls/registro.html',context)
 
+
 def login_view(request):
     if request.user.is_authenticated():
         return redirect(reverse('images:index'))
@@ -61,14 +74,15 @@ def login_view(request):
     if request.method=="POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(username=username,password=password)
+        user = authenticate(username=username, password=password)
         if user is not None:
             login(request,user)
-            return redirect(reverse('image:index'))
+            return redirect(reverse('images:index'))
         else:
             mensaje = "Invalido"
 
     return render(request,'polls/login.html',{'mensaje':mensaje})
+
 
 def logout_view(request):
     logout(request)
