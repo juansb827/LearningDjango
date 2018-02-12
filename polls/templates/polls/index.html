@@ -1,12 +1,60 @@
-{% load bootstrap3 %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script>
+        (function () {
+            $.getJSON("http://localhost:8000/polls/images").done(function (data) {
+                $.each(data, function (i, item) {
+                    var parta=' <div class="col-md-4 col-sm-6 col-lg-3 well">';
+                    var partc=' </div>';
+                    var partb;
+                    if (!item.fields.imageFile){
+                        partb='<img class="img-responsive" src="'+item.fields.url+'" width="500" height="300">';
+                    }else{
+                        partb='<img class="img-responsive" src="http://localhost:8000/'+item.fields.imageFile+'" width="500" height="300">';
+                    }
+                    $("#imagenes").prepend(a+b+c);
+
+                })
+            })
+
+        })();
+        (function () {
+            $.getJSON("http://localhost:8000/polls/isLogged").done(function (data) {
+                if(data.mensaje == "no"){
+                    $("#add_user").show();
+                    $("#cerrar_session").hide();
+                    $("#add_image").hide();
+                    $("#login-user").show();
+                }else{
+                    $("#add_user").hide();
+                    $("#cerrar_session").show();
+                    $("#add_image").show();
+                    $("#login-user").hide();
+                }
+            })
+        })();
+
+        function () {
+            $.getJSON("http://localhost:8000/polls/logout").done(function (data) {
+                if(data.mensaje == "ok"){
+                    location.reload();
+                }else{
+                    alert("hubo un error")
+                }
+            })
+        })();
+
+        }
+
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -25,13 +73,10 @@
         <ul class="nav navbar-nav">
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            {% if user.is_authenticated %}
-                <li><a class="glyphicon glyphicon-user" href="{% url 'images:index' %}">{{ user.username }}</a></li>
-                <li><a class="glyphicon glyphicon-log-out" href="{% url 'images:logout' %}">Logout</a></li>
-            {% else %}
-                <li><a href="{% url 'images:addUser' %}">Registro</a></li>
-                <li><a class="glyphicon glyphicon-log-in" href="{% url 'images:login' %}">Login </a></li>
-            {% endif %}
+            <li id="add_image"><a href="http://localhost:8000/polls/agregarImagen">Agregar imagen</a></li>
+            <li id="add_user"><a href="http://localhost:8000/polls/agregarUsuario">Registro</a></li>
+            <li><a class="glyphicon glyphicon-log-out" href="#" onclick="logout();" >Logout</a></li>
+            <li id="add_image" class="glyphicon-log-in"><a href="http://localhost:8000/polls/ingresar">Login</a></li>
         </ul>
     </div>
 </div>
@@ -39,22 +84,7 @@
 <br><br>
 
 <h1 align="center">Galeria</h1>
-{% if user.is_authenticated %}
-    <a href="{% url 'images:addImage' %}" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"> </span>Agregar Imagen</a>
-{% endif %}
-<br><br>
-{%  for imagen in lista_imagenes %}
-    <div class="col-md-4 col-sm-6 col-lg-3 well">
-    {% if imagen.imageFile == None %}
-        <img class="img-responsive" src="{{imagen.url}}" width="500" height="300">
-    {% else %}
-        <img class="img-responsive" src="/{{imagen.imageFile}}" width="500" height="300">
-    {% endif %}
-    </div>
-
-
-
-{% endfor %}
+<div class="row" id="imagenes   "></div>
 
 </body>
 </html>

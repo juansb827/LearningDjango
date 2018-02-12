@@ -1,25 +1,52 @@
-{% load bootstrap3 %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script>
+        function enviarForm() {
+            if ($("#password").val() !=$("#password2").val()){
+                alert("Las contraseñas no coinciden");
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url : "http://localhost:8000/polls/images",
+                data: JSON.stringify({
+                    username : $('#username').val(), first_name: $('#first_name').val(), last_name: $('#last_name').val(),
+                    password :  $('#password').val(), email :  $('#email').val(),
+
+
+                }),
+                contentType: "application/json; charshet=utf-8",
+                dataType : "json",
+                success : function (data) {
+                    window.location = "http://localhost:8000/polls/verImagenes";
+                },
+                failure : function (err) {
+                    alert("Hubo un error");
+                }
+            })
+        }
+    </script>
 </head>
 <body>
 <div class="row">
         <div class="col-sm-4 col-sm-offset-4">
-            {% block content %}
                 <form action="" method="post">
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-                    {%  buttons %}
+                    <input id="username" class="form-control input-md" placeholder="User name" required=""><br>
+                    <input id="first_name" class="form-control input-md" placeholder="First name" required=""><br>
+                    <input id="last_name" class="form-control input-md" placeholder="Last name" required=""><br>
+                    <input id="email" type="email" class="form-control input-md" placeholder="Email" required=""><br>
+                    <input id="password" type="password" class="form-control input-md" placeholder="Pass" required=""><br>
+                    <input id="password2" type="password" class="form-control input-md" placeholder="Pass Conf" required=""><br>
                     <input type="submit" value="Registrar" class="btn btn-primary btn-block">
                     <a href="{% url 'images:index' %}"  class="btn btn-primary btn-block">Cancelar</a>
-                    {% endbuttons %}
+
                 </form>
-            {% endblock %}
         </div>
 </div>
 </body>
