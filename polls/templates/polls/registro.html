@@ -14,7 +14,7 @@
 
             $.ajax({
                 type: "POST",
-                url : "http://localhost:8000/polls/images",
+                url : "http://localhost:8000/polls/addUser",
                 data: JSON.stringify({
                     username : $('#username').val(), first_name: $('#first_name').val(), last_name: $('#last_name').val(),
                     password :  $('#password').val(), email :  $('#email').val(),
@@ -36,7 +36,7 @@
 <body>
 <div class="row">
         <div class="col-sm-4 col-sm-offset-4">
-                <form action="" method="post">
+                <form action="" method="post" action="return enviarForm();">
                     <input id="username" class="form-control input-md" placeholder="User name" required=""><br>
                     <input id="first_name" class="form-control input-md" placeholder="First name" required=""><br>
                     <input id="last_name" class="form-control input-md" placeholder="Last name" required=""><br>

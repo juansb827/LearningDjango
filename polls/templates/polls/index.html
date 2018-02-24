@@ -10,8 +10,10 @@
 
     <script>
         (function () {
-            $.getJSON("http://localhost:8000/polls/images").done(function (data) {
+            $.getJSON("http://localhost:8000/polls/").done(function (data) {
+                console.log("data",data);
                 $.each(data, function (i, item) {
+
                     var parta=' <div class="col-md-4 col-sm-6 col-lg-3 well">';
                     var partc=' </div>';
                     var partb;
@@ -20,7 +22,7 @@
                     }else{
                         partb='<img class="img-responsive" src="http://localhost:8000/'+item.fields.imageFile+'" width="500" height="300">';
                     }
-                    $("#imagenes").prepend(a+b+c);
+                    $("#imagenes").prepend(parta+partb+partc);
 
                 })
             })
@@ -28,21 +30,22 @@
         })();
         (function () {
             $.getJSON("http://localhost:8000/polls/isLogged").done(function (data) {
+                console.log("LOGGED",data.mensaje);
                 if(data.mensaje == "no"){
                     $("#add_user").show();
-                    $("#cerrar_session").hide();
+                    $("#cerrar_sesion").hide();
                     $("#add_image").hide();
-                    $("#login-user").show();
+                    $("#login").show();
                 }else{
                     $("#add_user").hide();
                     $("#cerrar_session").show();
                     $("#add_image").show();
-                    $("#login-user").hide();
+                    $("#login").hide();
                 }
             })
         })();
 
-        function () {
+        function logout() {
             $.getJSON("http://localhost:8000/polls/logout").done(function (data) {
                 if(data.mensaje == "ok"){
                     location.reload();
@@ -50,8 +53,6 @@
                     alert("hubo un error")
                 }
             })
-        })();
-
         }
 
     </script>
@@ -75,8 +76,8 @@
         <ul class="nav navbar-nav navbar-right">
             <li id="add_image"><a href="http://localhost:8000/polls/agregarImagen">Agregar imagen</a></li>
             <li id="add_user"><a href="http://localhost:8000/polls/agregarUsuario">Registro</a></li>
-            <li><a class="glyphicon glyphicon-log-out" href="#" onclick="logout();" >Logout</a></li>
-            <li id="add_image" class="glyphicon-log-in"><a href="http://localhost:8000/polls/ingresar">Login</a></li>
+            <li id="cerrar_sesion"><a class="glyphicon glyphicon-log-out" href="#" onclick="logout();" >Logout</a></li>
+            <li id="login" class="glyphicon-log-in"><a href="http://localhost:8000/polls/ingresar">Login</a></li>
         </ul>
     </div>
 </div>
@@ -84,7 +85,7 @@
 <br><br>
 
 <h1 align="center">Galeria</h1>
-<div class="row" id="imagenes   "></div>
+<div class="row" id="imagenes"></div>
 
 </body>
 </html>

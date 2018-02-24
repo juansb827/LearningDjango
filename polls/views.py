@@ -4,14 +4,14 @@ from __future__ import unicode_literals
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
-from django.core.serializers import json
+
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 from .models import Imagen, ImageForm, UserForm
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
-
+import json
 
 # Create your views here.
 @csrf_exempt
@@ -57,16 +57,22 @@ def add_user(request):
 
 @csrf_exempt
 def login_view(request):
+    print "LOGIN attemp"
     if request.method=="POST":
+
         jsonUser= json.loads(request.body)
+
         username = jsonUser['username']
         password = jsonUser['password']
+
         user = authenticate(username=username, password=password)
+
         if user is not None:
             login(request,user)
-            mensaje = "Ok"
+            mensaje = "ok"
         else:
             mensaje = "Invalido"
+
 
     return JsonResponse({"mensaje":mensaje})
 
@@ -85,6 +91,18 @@ def isLoggedView_view(request):
         mensaje="no"
 
     return JsonResponse({"mensaje":mensaje})
+
+def ver_imagenes(request):
+    return render(request,"polls/index.html")
+
+def agregar_imagen(request):
+    return render(request,"polls/image_form.html")
+
+def agregar_usuario(request):
+    return render(request,"polls/registro.html")
+
+def ingresar(request):
+    return render(request,"polls/login.html")
 
 
 
